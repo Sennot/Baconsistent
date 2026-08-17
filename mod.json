@@ -1,0 +1,204 @@
+{
+  "geode": "5.8.2",
+  "gd": {
+    "win": "2.2081"
+  },
+  "id": "strafe.baconsistent",
+  "name": "Baconsistent",
+  "version": "v0.6.0",
+  "developer": "Strafe",
+  "description": "StartPos consistency trainer with profiles and an experimental in-level stage editor.",
+  "tags": [
+    "gameplay",
+    "utility",
+    "interface",
+    "customization"
+  ],
+  "settings": {
+    "training-title": {
+      "type": "title",
+      "name": "Training"
+    },
+    "enabled": {
+      "type": "bool",
+      "name": "Enable Baconsistent",
+      "description": "Track repetitions only when the current level has been explicitly bound to a saved StartPos profile.",
+      "default": true
+    },
+    "startpos-title": {
+      "type": "title",
+      "name": "StartPos profiles"
+    },
+    "repetitions": {
+      "type": "int",
+      "name": "Repetitions per part",
+      "description": "Default repetitions for every fixed stage. Individual stages can override this target from the pause menu.",
+      "default": 20,
+      "min": 1,
+      "max": 100,
+      "control": {
+        "arrows": true,
+        "arrow-step": 1,
+        "big-arrows": true,
+        "big-arrow-step": 5,
+        "slider": false,
+        "input": true
+      }
+    },
+    "auto-previous": {
+      "type": "bool",
+      "name": "Move backwards automatically",
+      "description": "When a part reaches its target, select the previous unfinished part. This follows the recommended 90-100 -> 80-90 -> ... order.",
+      "default": true
+    },
+    "auto-match-start": {
+      "type": "bool",
+      "name": "Match start position",
+      "description": "When an attempt starts near any detected StartPos boundary, automatically select that exact part.",
+      "default": true
+    },
+    "strict-start": {
+      "type": "bool",
+      "name": "Require exact small runs",
+      "description": "Only count a part if the attempt started near that part's beginning. Disable this if you want runs from earlier percentages to count too.",
+      "default": true
+    },
+    "start-tolerance": {
+      "type": "float",
+      "name": "Start tolerance (%)",
+      "description": "How close an attempt start must be to the selected part boundary.",
+      "default": 1.5,
+      "min": 0.1,
+      "max": 5.0,
+      "control": {
+        "arrows": true,
+        "arrow-step": 0.1,
+        "big-arrows": true,
+        "big-arrow-step": 0.5,
+        "slider": true,
+        "slider-step": 0.1,
+        "input": true
+      }
+    },
+    "validity-title": {
+      "type": "title",
+      "name": "Run validity"
+    },
+    "practice-mode-protection": {
+      "type": "bool",
+      "name": "Practice Mode protection",
+      "description": "When enabled, attempts that use Practice Mode are ignored completely and do not affect progress or statistics.",
+      "default": true
+    },
+    "noclip-protection": {
+      "type": "bool",
+      "name": "Noclip protection",
+      "description": "When enabled, a run is ignored only if GD attempts a lethal collision and noclip keeps the player alive. Merely having noclip enabled does not block a clean A-to-B run.",
+      "default": true
+    },
+    "manual-title": {
+      "type": "title",
+      "name": "Manual progress"
+    },
+    "manual-add-repetition": {
+      "type": "keybind",
+      "name": "Add repetition",
+      "description": "Add +1 repetition to the currently active stage.",
+      "default": "F6",
+      "category": "gameplay"
+    },
+    "manual-complete-stage": {
+      "type": "keybind",
+      "name": "Complete stage",
+      "description": "Set the currently active stage to its target.",
+      "default": "F7",
+      "category": "gameplay"
+    },
+    "appearance-title": {
+      "type": "title",
+      "name": "Appearance"
+    },
+    "theme-preset": {
+      "type": "string",
+      "name": "Theme",
+      "description": "Choose the Baconsistent UI preset. Turkmenistan, Udmurtia and Tatarstan are intentionally over-the-top joke themes.",
+      "default": "Original",
+      "one-of": [
+        "Original",
+        "Night",
+        "Turkmenistan",
+        "Udmurtia",
+        "Tatarstan"
+      ]
+    },
+    "custom-colors": {
+      "type": "bool",
+      "name": "Custom colors",
+      "description": "Override the selected theme's main UI colors with your own palette.",
+      "default": false
+    },
+    "custom-accent-color": {
+      "type": "rgb",
+      "name": "Accent color",
+      "default": "#ffda69",
+      "enable-if": "custom-colors"
+    },
+    "custom-surface-color": {
+      "type": "rgb",
+      "name": "Surface color",
+      "default": "#715b69",
+      "enable-if": "custom-colors"
+    },
+    "custom-text-color": {
+      "type": "rgb",
+      "name": "Text color",
+      "default": "#ffe0aa",
+      "enable-if": "custom-colors"
+    },
+    "custom-muted-color": {
+      "type": "rgb",
+      "name": "Muted text color",
+      "default": "#b8c5e1",
+      "enable-if": "custom-colors"
+    },
+    "custom-success-color": {
+      "type": "rgb",
+      "name": "Success color",
+      "default": "#70ffad",
+      "enable-if": "custom-colors"
+    },
+    "custom-bacon-color": {
+      "type": "rgb",
+      "name": "Bacon / secondary color",
+      "default": "#ff9991",
+      "enable-if": "custom-colors"
+    },
+    "custom-danger-color": {
+      "type": "rgb",
+      "name": "Danger / blocked-run color",
+      "default": "#ff5c5c",
+      "enable-if": "custom-colors"
+    },
+    "pause-ux-title": {
+      "type": "title",
+      "name": "Pause UX"
+    },
+    "pause-startpos-progress": {
+      "type": "bool",
+      "name": "Show StartPos progress on pause",
+      "description": "Replace the Practice Mode progress area while paused with the active StartPos repetition counter and remaining runs.",
+      "default": true
+    },
+    "success-notifications": {
+      "type": "bool",
+      "name": "Show successful-run notifications",
+      "description": "Show a short branded notification whenever the active fixed StartPos stage is successfully counted. Mastered stages and completed rounds get special notifications.",
+      "default": true
+    }
+  },
+  "resources": {
+    "sprites": [
+      "resources/*.png"
+    ]
+  }
+}

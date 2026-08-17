@@ -1,0 +1,14 @@
+/build/
+/.validation/
+/.validation-*/
+/.cache/
+/.idea/
+/.vscode/
+*.geode
+*.dll
+*.pdb
+*.obj
+*.ilk
+*.exe
+CMakeUserPresets.json
+compile_commands.json
