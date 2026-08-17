@@ -5,7 +5,7 @@
   },
   "id": "strafe.baconsistent",
   "name": "Baconsistent",
-  "version": "v0.6.0",
+  "version": "v0.6.1",
   "developer": "Strafe",
   "description": "StartPos consistency trainer with profiles and an experimental in-level stage editor.",
   "tags": [

@@ -272,7 +272,7 @@ double StageEditorLayer::modernPercentForX(float x) const {
     return core::modern22PercentFromTime(at, total);
 }
 
-float StageEditorLayer::screenXForLevelX(float x) const {
+float StageEditorLayer::screenXForLevelX(float x) {
     if (!m_worldRoot) {
         return -10000.f;
     }
@@ -287,7 +287,7 @@ float StageEditorLayer::levelXForScreenPoint(CCPoint screenPoint) const {
     return m_worldRoot->convertToNodeSpace(screenPoint).x;
 }
 
-int StageEditorLayer::nearestVisibleMarker(float screenX, float maxDistance) const {
+int StageEditorLayer::nearestVisibleMarker(float screenX, float maxDistance) {
     auto const win = getContentSize();
     auto best = -1;
     auto bestDistance = maxDistance;

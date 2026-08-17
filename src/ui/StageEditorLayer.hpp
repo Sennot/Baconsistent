@@ -35,9 +35,9 @@ private:
     [[nodiscard]] cocos2d::CCNode* findWorldRoot(PlayLayer* layer) const;
     [[nodiscard]] float levelXForMarker(int markerIndex) const;
     [[nodiscard]] double modernPercentForX(float x) const;
-    [[nodiscard]] float screenXForLevelX(float x) const;
+    [[nodiscard]] float screenXForLevelX(float x);
     [[nodiscard]] float levelXForScreenPoint(cocos2d::CCPoint screenPoint) const;
-    [[nodiscard]] int nearestVisibleMarker(float screenX, float maxDistance) const;
+    [[nodiscard]] int nearestVisibleMarker(float screenX, float maxDistance);
     void panWorld(float screenDeltaX);
 
     void onSave(cocos2d::CCObject*);

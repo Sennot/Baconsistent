@@ -2,7 +2,7 @@
 
 **Baconsistent** is a Windows-only Geode training mod for Geometry Dash 2.2081 by **Strafe**. It implements a fixed-part consistency method: every StartPos-defined stage has a target number of clean completions (20 by default), and finishing every stage advances the profile to the next round.
 
-## v0.6.0 experimental highlights
+## v0.6.1 experimental highlights
 
 - Experimental Stage Layout Editor inside the real paused level.
 - Every inner profile boundary is drawn as a draggable vertical line.
@@ -108,4 +108,4 @@ Baconsistent is MIT licensed. See `THIRD_PARTY_NOTICES.md` for technical referen
 
 ## Profile Manager
 
-v0.6.0 keeps the dedicated themed profile manager from v0.5.3. Select a profile in the left list, then use separate Bind/Unbind/Delete controls in the right details panel. Profile progress is write-through saved after every successful fixed-stage completion.
+v0.6.1 keeps the dedicated themed profile manager from v0.5.3. Select a profile in the left list, then use separate Bind/Unbind/Delete controls in the right details panel. Profile progress is write-through saved after every successful fixed-stage completion.

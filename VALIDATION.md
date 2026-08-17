@@ -1,17 +1,17 @@
-# Baconsistent v0.6.0 validation
+# Baconsistent v0.6.1 validation
 
 This source tree is designed as a repository-root archive: `mod.json`, `CMakeLists.txt`, `.github`, `src`, `resources`, and `tests` live directly at the root.
 
 ## Sandbox checks
 
 - Standalone C++23 training/core tests with GCC.
-- v0.6.0 source check verifies the pause progress title uses separate compile-time `fmt::format` literals for Original/Turkmenistan/Udmurtia/Tatarstan rather than a runtime-selected format string.
+- v0.6.1 source check verifies the pause progress title uses separate compile-time `fmt::format` literals for Original/Turkmenistan/Udmurtia/Tatarstan rather than a runtime-selected format string.
 - `TrainingPopup::init()` is explicitly marked `override`.
 - Manual progress core tests cover increment, decrement, complete, clamping, and reopening a completed stage.
 - `mod.json` includes native Geode keybind settings for +1 and Complete Stage.
 - `-Wall -Wextra -Werror -pedantic` enabled for the standalone test build.
 - Standalone C++23 tests with Clang + AddressSanitizer + UndefinedBehaviorSanitizer.
-- `mod.json` JSON parse, v0.6.0 metadata check, short-description limit check, theme enum/color-setting checks.
+- `mod.json` JSON parse, v0.6.1 metadata check, short-description limit check, theme enum/color-setting checks.
 - GitHub Actions YAML parse / Windows-only workflow check.
 - PNG signature / decode validation for all bundled resources.
 - Source grep verifies `Load Stage`, `onLoadStage`, and StartPos-activation UI code are removed.

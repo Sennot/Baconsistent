@@ -1,6 +1,10 @@
 # Changelog
 
-## v0.6.0 Experimental
+## v0.6.1 Experimental
+
+- Fixed Windows/Clang build failure in StageEditorLayer coordinate conversion.
+- No behavior changes to the experimental stage editor.
+
 
 - Added an in-level Stage Layout Editor.
 - Open it from the Stages page while paused; the real level remains visible behind the editor.

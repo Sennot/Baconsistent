@@ -9,7 +9,7 @@ v0.5 adds manual profile management, per-profile 2.1/2.2 percentages, Original /
 Windows x64 • GD 2.2081 • Geode 5.8.2
 
 
-### v0.6.0
+### v0.6.1
 Manual progress controls: -1, +1, complete stage, and configurable F6/F7 keybinds. Manual changes are crash-safe and do not alter attempt statistics.
 
 Adds the optional Udmurtia joke theme with black/white/red UI art, a Udmurt solar-sign motif, themed profile/recovery screens, pause branding and Izhevsk-flavored labels.

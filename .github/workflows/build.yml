@@ -20,8 +20,8 @@ jobs:
         run: |
           $mod = Get-Content -Raw ./mod.json | ConvertFrom-Json
           Write-Host "Baconsistent source version: $($mod.version)"
-          if ($mod.version -ne "v0.6.0") {
-            throw "Wrong/stale repository root. Expected Baconsistent v0.6.0, got $($mod.version)."
+          if ($mod.version -ne "v0.6.1") {
+            throw "Wrong/stale repository root. Expected Baconsistent v0.6.1, got $($mod.version)."
           }
           $required = @(
             "./src/main.cpp",
@@ -79,7 +79,7 @@ jobs:
             "./resources/round-ribbon.png"
           )
           foreach ($path in $required) {
-            if (-not (Test-Path $path)) { throw "Missing v0.6.0 source/resource: $path" }
+            if (-not (Test-Path $path)) { throw "Missing v0.6.1 source/resource: $path" }
           }
 
       - name: Build Geode mod
@@ -93,5 +93,5 @@ jobs:
       - name: Upload Baconsistent
         uses: actions/upload-artifact@v7
         with:
-          name: Baconsistent-v0.6.0-Windows
+          name: Baconsistent-v0.6.1-Windows
           path: ${{ steps.build.outputs.build-output }}
