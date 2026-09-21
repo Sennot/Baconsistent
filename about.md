@@ -1,15 +1,19 @@
 # Baconsistent
 
-A fixed-part Geometry Dash consistency trainer by **Strafe**.
+A fork of Blitzkrieg for fixed-part consistency practice.
 
-Create a reusable profile from a StartPos copy, explicitly bind that profile to any level you want to train, then farm every fixed A→B stage to its target. Profiles preserve repetitions, targets, rounds and statistics independently of the physical copy they came from.
+Create a profile from your StartPos copy and set **Passes per part**
+(default **20**, adjustable from **1 to 9999**). Parts stay fixed: they do
+not merge or grow after a clear. Practicing from the end is recommended.
 
-v0.5 adds manual profile management, per-profile 2.1/2.2 percentages, Original / Night / Turkmenistan / Udmurtia UI themes, and recovery of pre-profile legacy sessions.
+Each part shows **completed / target**. Use **− / +** to correct its count.
+Changing the target in **Edit Profile** keeps your accumulated progress.
+Failures do not reset the count. Successful passes need not be consecutive.
 
-Windows x64 • GD 2.2081 • Geode 5.8.2
+You can keep playing beyond a part's endpoint. Runs are recorded at death
+or level completion, using the original **one attempt, one target part** rule.
+The original profile tools, statistics, cheat detection and UI remain.
 
-
-### v0.6.1
-Manual progress controls: -1, +1, complete stage, and configurable F6/F7 keybinds. Manual changes are crash-safe and do not alter attempt statistics.
-
-Adds the optional Udmurtia joke theme with black/white/red UI art, a Udmurt solar-sign motif, themed profile/recovery screens, pause branding and Izhevsk-flavored labels.
+Original mod: **Zhulis / Blitzkrieg** (MIT license).
+Fixed-repetition training method: **бекончик**.
+News and curated copies are supplied by the original Blitzkrieg service.

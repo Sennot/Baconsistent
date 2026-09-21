@@ -1,204 +1,243 @@
 {
-  "geode": "5.8.2",
+  "geode": "5.10.1",
   "gd": {
-    "win": "2.2081"
+    "win": "2.2081",
+    "android": "2.2081",
+    "mac": "2.2081",
+    "ios": "2.2081"
   },
-  "id": "strafe.baconsistent",
+  "id": "sennot.baconsistent",
   "name": "Baconsistent",
-  "version": "v0.6.1",
-  "developer": "Strafe",
-  "description": "StartPos consistency trainer with profiles and an experimental in-level stage editor.",
+  "version": "v2.0.0",
+  "developer": "StrafeGMD",
+  "description": "Fixed-part consistency practice with adjustable repetition goals",
   "tags": [
     "gameplay",
-    "utility",
     "interface",
+    "performance",
+    "enhancement",
+    "offline",
+    "utility",
     "customization"
   ],
-  "settings": {
-    "training-title": {
-      "type": "title",
-      "name": "Training"
-    },
-    "enabled": {
-      "type": "bool",
-      "name": "Enable Baconsistent",
-      "description": "Track repetitions only when the current level has been explicitly bound to a saved StartPos profile.",
-      "default": true
-    },
-    "startpos-title": {
-      "type": "title",
-      "name": "StartPos profiles"
-    },
-    "repetitions": {
-      "type": "int",
-      "name": "Repetitions per part",
-      "description": "Default repetitions for every fixed stage. Individual stages can override this target from the pause menu.",
-      "default": 20,
-      "min": 1,
-      "max": 100,
-      "control": {
-        "arrows": true,
-        "arrow-step": 1,
-        "big-arrows": true,
-        "big-arrow-step": 5,
-        "slider": false,
-        "input": true
-      }
-    },
-    "auto-previous": {
-      "type": "bool",
-      "name": "Move backwards automatically",
-      "description": "When a part reaches its target, select the previous unfinished part. This follows the recommended 90-100 -> 80-90 -> ... order.",
-      "default": true
-    },
-    "auto-match-start": {
-      "type": "bool",
-      "name": "Match start position",
-      "description": "When an attempt starts near any detected StartPos boundary, automatically select that exact part.",
-      "default": true
-    },
-    "strict-start": {
-      "type": "bool",
-      "name": "Require exact small runs",
-      "description": "Only count a part if the attempt started near that part's beginning. Disable this if you want runs from earlier percentages to count too.",
-      "default": true
-    },
-    "start-tolerance": {
-      "type": "float",
-      "name": "Start tolerance (%)",
-      "description": "How close an attempt start must be to the selected part boundary.",
-      "default": 1.5,
-      "min": 0.1,
-      "max": 5.0,
-      "control": {
-        "arrows": true,
-        "arrow-step": 0.1,
-        "big-arrows": true,
-        "big-arrow-step": 0.5,
-        "slider": true,
-        "slider-step": 0.1,
-        "input": true
-      }
-    },
-    "validity-title": {
-      "type": "title",
-      "name": "Run validity"
-    },
-    "practice-mode-protection": {
-      "type": "bool",
-      "name": "Practice Mode protection",
-      "description": "When enabled, attempts that use Practice Mode are ignored completely and do not affect progress or statistics.",
-      "default": true
-    },
-    "noclip-protection": {
-      "type": "bool",
-      "name": "Noclip protection",
-      "description": "When enabled, a run is ignored only if GD attempts a lethal collision and noclip keeps the player alive. Merely having noclip enabled does not block a clean A-to-B run.",
-      "default": true
-    },
-    "manual-title": {
-      "type": "title",
-      "name": "Manual progress"
-    },
-    "manual-add-repetition": {
-      "type": "keybind",
-      "name": "Add repetition",
-      "description": "Add +1 repetition to the currently active stage.",
-      "default": "F6",
-      "category": "gameplay"
-    },
-    "manual-complete-stage": {
-      "type": "keybind",
-      "name": "Complete stage",
-      "description": "Set the currently active stage to its target.",
-      "default": "F7",
-      "category": "gameplay"
-    },
-    "appearance-title": {
-      "type": "title",
-      "name": "Appearance"
-    },
-    "theme-preset": {
-      "type": "string",
-      "name": "Theme",
-      "description": "Choose the Baconsistent UI preset. Turkmenistan, Udmurtia and Tatarstan are intentionally over-the-top joke themes.",
-      "default": "Original",
-      "one-of": [
-        "Original",
-        "Night",
-        "Turkmenistan",
-        "Udmurtia",
-        "Tatarstan"
-      ]
-    },
-    "custom-colors": {
-      "type": "bool",
-      "name": "Custom colors",
-      "description": "Override the selected theme's main UI colors with your own palette.",
-      "default": false
-    },
-    "custom-accent-color": {
-      "type": "rgb",
-      "name": "Accent color",
-      "default": "#ffda69",
-      "enable-if": "custom-colors"
-    },
-    "custom-surface-color": {
-      "type": "rgb",
-      "name": "Surface color",
-      "default": "#715b69",
-      "enable-if": "custom-colors"
-    },
-    "custom-text-color": {
-      "type": "rgb",
-      "name": "Text color",
-      "default": "#ffe0aa",
-      "enable-if": "custom-colors"
-    },
-    "custom-muted-color": {
-      "type": "rgb",
-      "name": "Muted text color",
-      "default": "#b8c5e1",
-      "enable-if": "custom-colors"
-    },
-    "custom-success-color": {
-      "type": "rgb",
-      "name": "Success color",
-      "default": "#70ffad",
-      "enable-if": "custom-colors"
-    },
-    "custom-bacon-color": {
-      "type": "rgb",
-      "name": "Bacon / secondary color",
-      "default": "#ff9991",
-      "enable-if": "custom-colors"
-    },
-    "custom-danger-color": {
-      "type": "rgb",
-      "name": "Danger / blocked-run color",
-      "default": "#ff5c5c",
-      "enable-if": "custom-colors"
-    },
-    "pause-ux-title": {
-      "type": "title",
-      "name": "Pause UX"
-    },
-    "pause-startpos-progress": {
-      "type": "bool",
-      "name": "Show StartPos progress on pause",
-      "description": "Replace the Practice Mode progress area while paused with the active StartPos repetition counter and remaining runs.",
-      "default": true
-    },
-    "success-notifications": {
-      "type": "bool",
-      "name": "Show successful-run notifications",
-      "description": "Show a short branded notification whenever the active fixed StartPos stage is successfully counted. Mastered stages and completed rounds get special notifications.",
-      "default": true
-    }
+  "dependencies": {
+    "cvolton.level-id-api": "v2.0.0",
+    "geode.node-ids": ">=v1.23.0"
   },
   "resources": {
     "sprites": [
-      "resources/*.png"
+      "resources/logo-circle.png",
+      "resources/startpos-button.png",
+      "resources/sprites/*.png",
+      "resources/sprites/range/*.png"
+    ],
+    "spritesheets": {
+      "Borders": [
+        "resources/sprites/borders/*.png"
+      ],
+      "Buttons": [
+        "resources/sprites/buttons/*.png"
+      ]
+    },
+    "files": [
+      "resources/audio/progress_complete.mp3",
+      "resources/audio/stage_complete.mp3"
     ]
+  },
+  "settings": {
+    "gameplay-settings": {
+      "type": "title",
+      "name": "Gameplay"
+    },
+    "ignore-practice-mode": {
+      "type": "bool",
+      "name": "Ignore Practice Mode",
+      "description": "Do not track runs or update progression while practicing in Practice Mode.",
+      "default": false
+    },
+    "enable-speedhack-detection": {
+      "name": "Enable Speedhack Detection",
+      "description": "Detects speed manipulation and prevents affected runs from being counted.",
+      "type": "bool",
+      "default": true
+    },
+    "ui-settings": {
+      "type": "title",
+      "name": "Interface"
+    },
+    "expand-progress-by-default": {
+      "type": "bool",
+      "name": "Auto-expand progress details",
+      "description": "Automatically expand progress details in the stage browser.",
+      "default": true
+    },
+    "disable-progress-expansion-animation": {
+      "type": "bool",
+      "name": "Disable expansion animation",
+      "description": "Disable the animation used when progress statistics expand.",
+      "default": false
+    },
+    "replace-practice-bar-with-blitzkrieg": {
+      "type": "bool",
+      "name": "Baconsistent instead of practice bar",
+      "description": "Replace Geometry Dash's practice bar with the Baconsistent progression bar.",
+      "default": true
+    },
+    "practice-bar-divisions-color": {
+      "type": "color",
+      "name": "Practice stage divider color",
+      "description": "Color of the stage division markers in the progression bar.",
+      "default": "#ffffff",
+      "enable-if": "replace-practice-bar-with-blitzkrieg"
+    },
+    "practice-bar-stages-fill-color": {
+      "name": "Stage progression fill color",
+      "type": "color",
+      "default": "#ff0052",
+      "enable-if": "replace-practice-bar-with-blitzkrieg"
+    },
+    "practice-bar-ranges-fill-color": {
+      "name": "Run progression fill color",
+      "type": "color",
+      "default": "#ffc8cf",
+      "enable-if": "replace-practice-bar-with-blitzkrieg"
+    },
+    "practice-bar-divisions-transparency": {
+      "type": "float",
+      "name": "Stage divider opacity",
+      "description": "Opacity of stage division markers in the Baconsistent progression bar.",
+      "default": 0.4,
+      "min": 0.1,
+      "max": 1,
+      "enable-if": "replace-practice-bar-with-blitzkrieg",
+      "control": {
+        "slider": true,
+        "slider-step": 0.1,
+        "arrow-step": 0.1
+      }
+    },
+    "streamer-mode": {
+      "type": "title",
+      "name": "Streamer mode"
+    },
+    "enable-streamer-mode": {
+      "type": "bool",
+      "name": "Enable streamer mode",
+      "description": "Hide profile names by showing only their first letter in the interface.",
+      "default": false
+    },
+    "notifications-settings": {
+      "type": "title",
+      "name": "Notifications"
+    },
+    "disable-run-notifications": {
+      "type": "bool",
+      "name": "Disable run notifications",
+      "description": "Do not show notifications when a run is recorded.",
+      "default": false
+    },
+    "disable-run-notification-sound": {
+      "type": "bool",
+      "name": "Disable run notification sound",
+      "description": "Keep run notifications visible but mute their sound.",
+      "default": false
+    },
+    "sfx-settings": {
+      "type": "title",
+      "name": "SFX"
+    },
+    "ignore-built-in-game-sfx": {
+      "name": "Ignore the game's built-in SFX",
+      "description": "Mute Geometry Dash's built-in sound effects while Baconsistent SFX are active.",
+      "type": "bool",
+      "default": false
+    },
+    "sfx-volume": {
+      "name": "SFX volume",
+      "description": "Set the volume of Baconsistent progress and stage sounds.",
+      "type": "float",
+      "default": 1,
+      "min": 0,
+      "max": 1,
+      "control": {
+        "slider": true,
+        "slider-step": 0.1,
+        "arrow-step": 0.1
+      }
+    },
+    "sfx-use-custom-sounds": {
+      "name": "Use custom SFX",
+      "type": "bool",
+      "default": false,
+      "description": "Use custom sounds selected below for progress and stage completions."
+    },
+    "sfx-progress-path": {
+      "name": "Progress pass SFX",
+      "type": "file",
+      "description": "Custom sound played when a run completes a progression range.",
+      "enable-if": "sfx-use-custom-sounds",
+      "default": {
+        "android": "",
+        "mac": "",
+        "win": "",
+        "ios": ""
+      },
+      "control": {
+        "dialog": "open",
+        "filters": [
+          {
+            "files": [
+              "*.mp3",
+              "*.ogg"
+            ],
+            "description": "Sound Files"
+          }
+        ]
+      }
+    },
+    "sfx-stage-path": {
+      "name": "Stage pass SFX",
+      "type": "file",
+      "description": "Custom sound played when a training stage is completed.",
+      "enable-if": "sfx-use-custom-sounds",
+      "default": {
+        "android": "",
+        "mac": "",
+        "win": "",
+        "ios": ""
+      },
+      "control": {
+        "dialog": "open",
+        "filters": [
+          {
+            "files": [
+              "*.mp3",
+              "*.ogg"
+            ],
+            "description": "Sound Files"
+          }
+        ]
+      }
+    },
+    "keybinds": {
+      "type": "title",
+      "name": "Keybinds"
+    },
+    "next-stage-keybind": {
+      "type": "keybind",
+      "name": "Switch to the next stage",
+      "default": [
+        "D",
+        "E"
+      ]
+    },
+    "prev-stage-keybind": {
+      "type": "keybind",
+      "name": "Switch to the previous stage",
+      "default": [
+        "A",
+        "Q"
+      ]
+    }
   }
 }

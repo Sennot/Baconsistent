@@ -1,0 +1,51 @@
+#pragma once
+#include <Geode/Geode.hpp>
+#include <Geode/loader/Event.hpp>
+
+#include "./BlitzkriegProfile.hpp"
+#include "./WhiteListExport/WhiteListExport.hpp"
+#include "../../../CreateProfilePopup/index.hpp"
+
+#include "../../../../ui/RectNode.hpp"
+#include "../../../../events/ProfilesChangedEvent.hpp"
+#include "../../../../serialization/profile/index.hpp"
+#include "../../../../store/GlobalStore.hpp"
+#include "../../../../utils/generateProfile.hpp"
+#include "../../../../utils/selectJsonFile.hpp"
+#include "../../../../utils/findStartposesFromCurrentLevel.hpp"
+
+using namespace geode::prelude;
+
+class ProfilesListLayer : public CCLayer
+{
+private:
+  ScrollLayer *m_scroll = nullptr;
+  GJGameLevel *m_level = nullptr;
+  // EventListener<EventFilter<ProfilesChangedEvent>>
+  ListenerHandle m_listener;
+  CCSize m_contentSize;
+
+  std::vector<Profile> m_profiles;
+
+  void onCreate(CCObject *sender);
+  void onImport(CCObject *sender);
+  void onExport(CCObject *sender);
+
+  void drawSectionHeader(const std::string &title);
+  void drawDivider();
+
+public:
+  static ProfilesListLayer *create(
+      GJGameLevel *level,
+      std::vector<Profile> const &profiles,
+      const CCSize &contentSize);
+
+  bool init(
+      GJGameLevel *level,
+      std::vector<Profile> const &profiles,
+      const CCSize &contentSize);
+
+  void reload();
+  void scrollToTop();
+  ScrollLayer *getScrollLayer() const { return m_scroll; }
+};
