@@ -27,14 +27,14 @@ class StageListLayer : public CCLayer
 {
 private:
   CCSize m_contentSize;
-  CCSprite *m_lockSpr;
-  ScrollLayer *m_scroll;
-  CCLayer *m_content;
+  CCSprite *m_lockSpr = nullptr;
+  ScrollLayer *m_scroll = nullptr;
+  CCLayer *m_content = nullptr;
 
-  CCMenu *m_buttonMenuLeft;
-  CCMenu *m_buttonMenuRight;
-  CCMenuItemSpriteExtra *m_buttonLeft;
-  CCMenuItemSpriteExtra *m_buttonRight;
+  CCMenu *m_buttonMenuLeft = nullptr;
+  CCMenu *m_buttonMenuRight = nullptr;
+  CCMenuItemSpriteExtra *m_buttonLeft = nullptr;
+  CCMenuItemSpriteExtra *m_buttonRight = nullptr;
 
   // EventListener<EventFilter<StagesChangedEvent>>
   ListenerHandle m_listener;
@@ -42,17 +42,18 @@ private:
   ListenerHandle m_listenerUpdateScrollLayout;
   ListenerHandle m_listenerStageRangesChanged;
 
-  GJGameLevel *m_level;
-  Profile *m_profile;
-  std::vector<Stage> *m_stages;
-  Stage *m_stage;
-  Stage *m_uncheckedStage;
-  int m_currentIndex;
+  GJGameLevel *m_level = nullptr;
+  Profile *m_profile = nullptr;
+  std::vector<Stage> *m_stages = nullptr;
+  Stage *m_stage = nullptr;
+  Stage *m_uncheckedStage = nullptr;
+  int m_currentIndex = 0;
 
   // Sort / Filters
   StageListSortBy m_sortBy = StageListSortBy::ASC;
   bool m_hideCompletedRuns = false;
 
+  void onRefreshScheduled(float);
   void onPrevStage();
   void onNextStage();
   void onPrevStageBtn(CCObject *);

@@ -67,6 +67,7 @@ private:
 
   void onTabButton(CCObject *);
   void onSettingsButton(CCObject *);
+  void onNewStage(CCObject*);
   void activateTab(TabButton *btnToActivate);
   void onToggleSort(CCObject *sender);
   void onToggleVisability(CCObject *sender);

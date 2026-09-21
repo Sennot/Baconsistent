@@ -1,3 +1,12 @@
+# Baconsistent v1.1.0
+
+- Per-run goals with the existing pencil icon and a matching Run Target popup.
+- Repeatable stages: New Stage starts another cycle of the same fixed parts.
+- Each cycle has independent counters, attempts, best runs and playtime.
+- Correct stage navigation and scoring, including reopened historical goals.
+- Existing 1.0.0 saves and custom goals are preserved through loading/export.
+- Profile edits preserve cycle history; zero-statistics graphs remain safe.
+
 # Baconsistent v1.0.0
 
 - Fixed adjacent parts instead of progressively longer stages.

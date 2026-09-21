@@ -31,4 +31,5 @@ struct Range
   int attemptsToComplete = 0;
   int completionCounter = 0;
   int recordedPasses = 0; // Actual passes, unaffected by manual corrections.
+  int requiredPasses = 0; // 0 inherits the profile goal; otherwise local to this stage/run.
 };

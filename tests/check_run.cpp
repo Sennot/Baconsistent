@@ -72,5 +72,21 @@ int main()
     assert(store.checkRun("p", 4) == -1); // Continue after completing the profile.
     assert(parts.back().completionCounter == 3);
     assert(store.saves == 8);
+    assert(bacon::appendCycle(store.profile));
+    auto& oldCycle = store.profile.data.stages[0];
+    auto& newCycle = store.profile.data.stages[1];
+    auto& newPart = newCycle.ranges.back();
+    bacon::setRunGoal(store.profile, newPart, 3);
+    assert(store.checkRun("p", 4) == -1);
+    assert(newPart.completionCounter == 1 && !newPart.checked);
+    assert(oldCycle.ranges.back().completionCounter == 3); // No accidental credit to cycle 1.
+    assert(newPart.attempts == 1 && newPart.timePlayed == 4);
+    assert(store.checkRun("p", 4) == -1 && !newPart.checked);
+    assert(store.checkRun("p", 4) == 0 && newPart.checked);
+    assert(newPart.completionCounter == 3 && oldCycle.ranges.back().completionCounter == 3);
+    bacon::setRunGoal(store.profile, oldCycle.ranges.back(), 4);
+    assert(store.checkRun("p", 4) == 1); // Finish reopened historical goal, then resume cycle 2.
+    assert(oldCycle.ranges.back().completionCounter == 4 && newPart.completionCounter == 3);
+    assert(bacon::activeStage(store.profile) == &newCycle);
     std::cout << "Production checkRun regression checks passed\n";
 }

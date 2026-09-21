@@ -122,7 +122,7 @@ bool StagesGraphLayer::init(GJGameLevel *level, const CCSize &contentSize)
     maxY = std::max(maxY, std::max(playtime, attempts));
   }
 
-  int diffY = maxY - minY;
+  int diffY = std::max(10, static_cast<int>(maxY - minY));
 
   // ! --- GRID --- !
   m_graph->setGrid(1, diffY / 10, {60, 60, 60, 255});

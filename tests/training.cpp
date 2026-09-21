@@ -59,5 +59,53 @@ int main()
     legacy.requiredPasses = 0;
     bacon::refreshCompletion(legacy);
     assert(legacy.requiredPasses == 1);
-    std::cout << "Training regression checks passed\n";
+    Profile cycles;
+    cycles.requiredPasses = 2;
+    cycles.data.stages = bacon::makeFixedStages({10, 20});
+    auto& firstPart = cycles.data.stages[0].ranges[0];
+    bacon::adjustPasses(cycles, firstPart, 2);
+    bacon::setRunGoal(cycles, firstPart, 3);
+    assert(firstPart.completionCounter == 2 && !firstPart.checked);
+    assert(bacon::passGoal(cycles, cycles.data.stages[0].ranges[1]) == 2);
+    assert(!bacon::appendCycle(cycles));
+    bacon::adjustPasses(cycles, firstPart, 1);
+    for (auto& range : cycles.data.stages[0].ranges)
+        bacon::adjustPasses(cycles, range, bacon::passGoal(cycles, range) - range.completionCounter);
+    firstPart.attempts = 11;
+    firstPart.timePlayed = 8.f;
+    firstPart.firstRunTo = 10;
+    firstPart.recordedPasses = 3;
+    const auto firstId = firstPart.id;
+    assert(bacon::appendCycle(cycles));
+    // References to vector elements must be re-acquired after appending.
+    auto& cycle1 = cycles.data.stages[0];
+    auto& cycle2 = cycles.data.stages[1];
+    assert(cycle1.checked && !cycle2.checked);
+    assert(cycle1.ranges[0].attempts == 11 && cycle1.ranges[0].timePlayed == 8.f);
+    assert(cycle2.ranges[0].id != firstId);
+    assert(cycle2.ranges[0].completionCounter == 0 && cycle2.ranges[0].recordedPasses == 0);
+    assert(cycle2.ranges[0].attempts == 0 && cycle2.ranges[0].firstRunTo == 0);
+    assert(cycle2.ranges[0].from == cycle1.ranges[0].from && cycle2.ranges[0].to == cycle1.ranges[0].to);
+    assert(bacon::passGoal(cycles, cycle2.ranges[0]) == 3);
+    bacon::setRunGoal(cycles, cycle2.ranges[0], 8);
+    assert(bacon::passGoal(cycles, cycle1.ranges[0]) == 3);
+    assert(bacon::passGoal(cycles, cycle2.ranges[1]) == 2);
+    bacon::adjustPasses(cycles, cycle2.ranges[0], 1);
+    assert(cycle1.ranges[0].completionCounter == 3 && cycle2.ranges[0].completionCounter == 1);
+    bacon::normalizeTraining(cycles); // Used after loading saved JSON; must retain both cycles.
+    assert(cycles.data.stages.size() == 2 && cycle2.ranges[0].requiredPasses == 8);
+    assert(bacon::activeStage(cycles) == &cycle2);
+    bacon::setRunGoal(cycles, cycle1.ranges[0], 4);
+    assert(bacon::activeStage(cycles) == &cycle1); // A raised old goal reopens only that cycle.
+    assert(cycle2.ranges[0].completionCounter == 1);
+    bacon::setRunGoal(cycles, cycle1.ranges[0], 3);
+    auto merged = bacon::mergeCycleRanges(cycles.data.stages, bacon::makeFixedStages({10, 20, 50}));
+    assert(merged.size() == 2 && merged[0].ranges.size() == 3 && merged[1].ranges.size() == 4);
+    assert(merged[0].ranges[0].attempts == 11);
+    assert(merged[1].ranges[0].completionCounter == 1 && merged[1].ranges[0].requiredPasses == 8);
+    assert(merged[1].ranges[2].completionCounter == 0);
+    bacon::setRunGoal(cycles, cycle2.ranges[0], 0);
+    assert(bacon::passGoal(cycles, cycle2.ranges[0]) == 2);
+    assert(!bacon::appendCycle(cycles));
+    std::cout << "Training, per-run goals and cycle regression checks passed\n";
 }

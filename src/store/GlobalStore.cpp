@@ -519,8 +519,10 @@ int GlobalStore::checkRun(
   for (auto &stage :
        currentProfile->data.stages)
   {
-    // Fixed parts stay available for additional practice after the goal.
-
+    // Only the first unfinished cycle receives attempts. Once every cycle
+    // is complete, additional practice belongs to the latest cycle.
+    if (&stage != bacon::activeStage(*currentProfile))
+      continue;
 
     targetStage = &stage;
 
@@ -640,14 +642,14 @@ int GlobalStore::checkRun(
       break;
 
     const bool newlyCompleted = bacon::recordPass(
-        *statsRange, currentProfile->requiredPasses, runStart, runEnd);
+        *statsRange, bacon::passGoal(*currentProfile, *statsRange), runStart, runEnd);
 
     if (!Mod::get()->getSettingValue<bool>("disable-run-notifications"))
     {
       geode::Notification::create(
           fmt::format("{:.2f}-{:.2f}: {}/{}",
               statsRange->from, statsRange->to,
-              statsRange->completionCounter, currentProfile->requiredPasses),
+              statsRange->completionCounter, bacon::passGoal(*currentProfile, *statsRange)),
           geode::NotificationIcon::Success,
           geode::NOTIFICATION_DEFAULT_TIME)->show();
     }

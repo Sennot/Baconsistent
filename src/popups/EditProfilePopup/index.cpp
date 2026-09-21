@@ -78,7 +78,7 @@ bool EditProfilePopup::init(Profile *profile, GJGameLevel *level)
   m_percentagesList = ToggablePercentagesList::create(
       {m_mainLayer->getContentWidth() - 24.0f, 80.0f},
       getAllStartposesFromProfile(*profile),
-      profile->data.stages.empty() ? std::vector<float>{} : getDisabledStartposesFromStage(profile->data.stages[0]));
+      bacon::activeStage(*profile) ? getDisabledStartposesFromStage(*bacon::activeStage(*profile)) : std::vector<float>{});
   m_percentagesList->setAnchorPoint({.5f, 1});
   m_percentagesList->setPosition(m_mainLayer->getContentWidth() / 2, useCheckboxMenu->getPositionY() - 16.f - 10.f);
   m_mainLayer->addChild(m_percentagesList);
@@ -198,7 +198,7 @@ void EditProfilePopup::onSave(CCObject *)
     return;
   }
 
-  auto merged = mergeProfiles(*m_profile, generateProfile("_mergeProfile", newStartposes).as<Profile>().unwrap(), false);
+  auto merged = *m_profile; // Editing a name/goal must preserve every cycle.
   merged.profileName = m_profileNameInput->getString();
   merged.discordWebhookForRunNotifications = m_discordWebhookInput->getString();
   merged.discordWebhookForRunNotificationsEnabled = m_webhookEnabled;

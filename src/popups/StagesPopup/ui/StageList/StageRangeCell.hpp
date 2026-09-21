@@ -58,6 +58,7 @@ private:
 
   int m_requiredPasses = 20;
   void onAdjustPasses(CCObject *sender);
+  void onEditGoal(CCObject*);
   void applyPassAdjustment(int delta);
   void onToggle(CCObject *sender);
   void onExpand(CCObject *);

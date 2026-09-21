@@ -1,4 +1,5 @@
 #include "StageRangeCell.hpp"
+#include "../../../EditRunGoalPopup/index.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -114,7 +115,7 @@ bool StageRangeCell::init(
     if (auto *profile =
             GlobalStore::get()->getProfileByLevel(m_level))
     {
-        m_requiredPasses = profile->requiredPasses;
+        m_requiredPasses = bacon::passGoal(*profile, *m_range);
         const auto currentRange =
             GlobalStore::get()->getCurrentRange(profile->id);
 
@@ -215,6 +216,12 @@ bool StageRangeCell::init(
         button->setPosition({cellSize.width / 2.f + delta * 65.f, 12.f});
         counterMenu->addChild(button);
     }
+    auto editSprite = CCSprite::createWithSpriteFrameName("edit-profile-btn.png"_spr);
+    editSprite->setScale(16.f / editSprite->getContentWidth());
+    auto editButton = CCMenuItemSpriteExtra::create(editSprite, this, menu_selector(StageRangeCell::onEditGoal));
+    editButton->setID("edit-run-target");
+    editButton->setPosition({cellSize.width - 11.f, 12.f});
+    counterMenu->addChild(editButton);
     m_head->addChild(counterMenu);
 
 
@@ -874,6 +881,22 @@ void StageRangeCell::onToggle(CCObject *)
     m_checkbox->toggle(m_checked);
 }
 
+void StageRangeCell::onEditGoal(CCObject*)
+{
+    // Goals can be changed on completed and temporarily locked cycles too.
+    auto profile = GlobalStore::get()->getProfileByLevel(m_level);
+    if (!profile)
+        return;
+    for (auto const& stage : profile->data.stages)
+        for (auto const& range : stage.ranges)
+            if (range.id == m_id)
+            {
+                if (auto popup = EditRunGoalPopup::create(*profile, range))
+                    popup->show();
+                return;
+            }
+}
+
 void StageRangeCell::onAdjustPasses(CCObject *sender)
 {
     if (auto button = typeinfo_cast<CCMenuItemSpriteExtra *>(sender))
@@ -894,7 +917,7 @@ void StageRangeCell::applyPassAdjustment(int delta)
                 bacon::adjustPasses(*profile, range, delta);
                 m_range = &range;
                 m_checked = range.checked;
-                m_requiredPasses = profile->requiredPasses;
+                m_requiredPasses = bacon::passGoal(*profile, *m_range);
                 m_checkbox->toggle(!m_checked);
                 updateTextColors();
                 updateStatusBadge();

@@ -143,7 +143,8 @@ void Graph::redraw()
     }
   }
 
-  int linesYCount = (maxY - minY) / m_gridEveryY;
+  // Repeated cycles may have identical (including all-zero) statistics.
+  int linesYCount = std::max(1, static_cast<int>((maxY - minY) / m_gridEveryY));
   maxY += (maxY - minY) / linesYCount * static_cast<int>(linesYCount * 0.2);
 
   CCPoint scale{

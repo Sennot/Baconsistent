@@ -22,7 +22,7 @@ inline std::vector<Stage> makeFixedStages(std::vector<float> points)
         return std::abs(a - b) < 0.001f;
     }), points.end());
 
-    // One permanent stage: adjacent parts never grow after a pass.
+    // Start with one cycle: adjacent parts never grow after a pass.
     Stage stage;
     stage.id = "fixed-parts";
     stage.stage = 1;
@@ -37,6 +37,28 @@ inline std::vector<Stage> makeFixedStages(std::vector<float> points)
     return {stage};
 }
 
+inline int passGoal(Profile const& profile, Range const& range)
+{
+    return std::clamp(range.requiredPasses > 0 ? range.requiredPasses : profile.requiredPasses,
+        1, maxPasses);
+}
+
+inline Stage* activeStage(Profile& profile)
+{
+    for (auto& stage : profile.data.stages)
+        if (!stage.checked)
+            return &stage;
+    return profile.data.stages.empty() ? nullptr : &profile.data.stages.back();
+}
+
+inline Stage const* activeStage(Profile const& profile)
+{
+    for (auto const& stage : profile.data.stages)
+        if (!stage.checked)
+            return &stage;
+    return profile.data.stages.empty() ? nullptr : &profile.data.stages.back();
+}
+
 inline void refreshCompletion(Profile& profile)
 {
     profile.requiredPasses = std::clamp(profile.requiredPasses, 1, maxPasses);
@@ -47,7 +69,7 @@ inline void refreshCompletion(Profile& profile)
         for (auto& range : stage.ranges)
         {
             range.completionCounter = std::max(0, range.completionCounter);
-            range.checked = range.completionCounter >= profile.requiredPasses;
+            range.checked = range.completionCounter >= passGoal(profile, range);
             if (!range.checked)
                 range.completedAt = 0;
             if (range.consider)
@@ -119,9 +141,77 @@ inline void adjustPasses(Profile& profile, Range& range, int delta)
     range.completionCounter = static_cast<int>(std::clamp(
         count, 0LL, static_cast<long long>(std::numeric_limits<int>::max())));
     range.automaticallyClosed = false;
-    if (range.completionCounter < profile.requiredPasses)
+    if (range.completionCounter < passGoal(profile, range))
         range.completedAt = 0;
     // Manual corrections do not fabricate attempts, first clears or best runs.
     refreshCompletion(profile);
+}
+
+inline void setRunGoal(Profile& profile, Range& range, int target)
+{
+    range.requiredPasses = std::clamp(target, 0, maxPasses);
+    refreshCompletion(profile);
+}
+
+inline bool appendCycle(Profile& profile)
+{
+    refreshCompletion(profile);
+    if (profile.data.stages.empty() ||
+        std::any_of(profile.data.stages.begin(), profile.data.stages.end(),
+            [](Stage const& stage) { return !stage.checked; }))
+        return false;
+
+    auto const& previous = profile.data.stages.back();
+    Stage next;
+    next.stage = previous.stage + 1;
+    next.id = "fixed-stage-" + std::to_string(next.stage);
+    for (auto const& old : previous.ranges)
+    {
+        Range fresh;
+        fresh.id = next.id + "-part-" + std::to_string(old.from) + "-" + std::to_string(old.to);
+        fresh.from = old.from;
+        fresh.to = old.to;
+        fresh.consider = old.consider;
+        fresh.requiredPasses = old.requiredPasses;
+        fresh.note = old.note;
+        next.ranges.push_back(std::move(fresh));
+    }
+    profile.data.stages.push_back(std::move(next));
+    return true;
+}
+
+// Explicit boundary edits affect the current/future cycles, leaving earlier
+// cycle history intact. Match counters only inside their own cycle.
+inline std::vector<Stage> mergeCycleRanges(
+    std::vector<Stage> const& oldStages, std::vector<Stage> const& newStages)
+{
+    if (oldStages.empty())
+        return newStages;
+    if (newStages.empty())
+        return oldStages;
+    auto result = oldStages;
+    auto first = std::find_if(result.begin(), result.end(),
+        [](Stage const& stage) { return !stage.checked; });
+    if (first == result.end())
+        first = result.end() - 1;
+    for (auto it = first; it != result.end(); ++it)
+    {
+        auto oldRanges = it->ranges;
+        it->ranges.clear();
+        for (auto fresh : newStages.front().ranges)
+        {
+            auto old = std::find_if(oldRanges.begin(), oldRanges.end(), [&](Range const& range) {
+                return std::abs(range.from - fresh.from) < .001f &&
+                       std::abs(range.to - fresh.to) < .001f;
+            });
+            if (old != oldRanges.end())
+                fresh = *old;
+            else
+                fresh.id = it->id + "-part-" + std::to_string(fresh.from) + "-" + std::to_string(fresh.to);
+            fresh.consider = true;
+            it->ranges.push_back(std::move(fresh));
+        }
+    }
+    return result;
 }
 }

@@ -8,9 +8,9 @@
   },
   "id": "sennot.baconsistent",
   "name": "Baconsistent",
-  "version": "v2.0.0",
+  "version": "v2.1.0",
   "developer": "StrafeGMD",
-  "description": "Fixed-part consistency practice with adjustable repetition goals",
+  "description": "Fixed-part practice with per-run goals and repeatable training stages",
   "tags": [
     "gameplay",
     "interface",

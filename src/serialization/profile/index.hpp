@@ -38,7 +38,8 @@ struct matjson::Serialize<Range>
         .completedAt = getOr<std::time_t>(value, "completedAt", 0),
         .attemptsToComplete = getOr<int>(value, "attemptsToComplete", 0),
         .completionCounter = getOr<int>(value, "completionCounter", 0),
-        .recordedPasses = getOr<int>(value, "recordedPasses", getOr<int>(value, "completionCounter", 0))});
+        .recordedPasses = getOr<int>(value, "recordedPasses", getOr<int>(value, "completionCounter", 0)),
+        .requiredPasses = std::clamp(getOr<int>(value, "requiredPasses", 0), 0, bacon::maxPasses)});
   }
 
   static matjson::Value toJson(Range const &r)
@@ -61,6 +62,7 @@ struct matjson::Serialize<Range>
     obj["attemptsToComplete"] = r.attemptsToComplete;
     obj["completionCounter"] = r.completionCounter;
     obj["recordedPasses"] = r.recordedPasses;
+    obj["requiredPasses"] = r.requiredPasses;
     return obj;
   }
 };

@@ -153,6 +153,18 @@ void StagesPopup::drawCurrentStage()
     return;
   }
 
+  auto stageMenu = CCMenu::create();
+  stageMenu->setPosition({0.f, 0.f});
+  auto newStageSprite = ButtonSprite::create("New Stage", 0, 0,
+      "goldFont.fnt", "GJ_button_01.png", 0.f, .8f);
+  newStageSprite->setScale(.55f);
+  auto newStageButton = CCMenuItemSpriteExtra::create(newStageSprite, this,
+      menu_selector(StagesPopup::onNewStage));
+  newStageButton->setID("new-cycle");
+  newStageButton->setPosition({m_size.width - 65.f, m_size.height - 25.f});
+  stageMenu->addChild(newStageButton);
+  m_currentStageNode->addChild(stageMenu);
+
   // ! --- Title --- !
   drawCurrentStageTitle(
       profile->data.stages, padding);
@@ -458,4 +470,19 @@ void StagesPopup::drawCurrentStageTitle(std::vector<Stage> &stages, UIPadding pa
 void StagesPopup::onSettingsButton(CCObject *)
 {
   geode::openSettingsPopup(Mod::get(), false);
+}
+
+void StagesPopup::onNewStage(CCObject*)
+{
+  auto profile = GlobalStore::get()->getProfileByLevel(m_levelId);
+  if (!profile)
+    return;
+  if (!bacon::appendCycle(*profile))
+  {
+    FLAlertLayer::create("New Stage", "Complete all parts in the current cycles first.", "OK")->show();
+    return;
+  }
+  GlobalStore::get()->updateProfile(*profile);
+  // Appending a stage may move the vector; rebuild all views before using it.
+  drawContent();
 }

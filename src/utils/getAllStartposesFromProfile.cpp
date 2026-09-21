@@ -5,7 +5,7 @@ std::vector<float> getAllStartposesFromProfile(const Profile &profile)
   std::vector<float> startposes;
   if (profile.data.stages.empty())
     return startposes;
-  Stage firstStage = profile.data.stages[0];
+  Stage firstStage = *bacon::activeStage(profile);
 
   if (firstStage.ranges.empty())
     return startposes;

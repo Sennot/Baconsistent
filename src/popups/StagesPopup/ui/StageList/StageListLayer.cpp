@@ -35,8 +35,9 @@ bool StageListLayer::init(
   m_listenerStageRangesChanged = StageRangesChangedEvent().listen(
       [this]()
       {
-        m_profile = GlobalStore::get()->getProfileByLevel(m_level);
-        m_uncheckedStage = getFirstUncheckedStage(*m_profile);
+        // Finish the current menu callback before rebuilding its cells.
+        this->unschedule(schedule_selector(StageListLayer::onRefreshScheduled));
+        this->scheduleOnce(schedule_selector(StageListLayer::onRefreshScheduled), 0.f);
 
         return ListenerResult::Propagate;
       });
@@ -152,9 +153,27 @@ bool StageListLayer::init(
   return true;
 }
 
+void StageListLayer::onRefreshScheduled(float)
+{
+  const float oldY = m_scroll ? m_scroll->m_contentLayer->getPositionY() : 0.f;
+  reload();
+  if (m_scroll)
+  {
+    const float minY = std::min(0.f, m_scroll->getContentHeight() - m_scroll->m_contentLayer->getContentHeight());
+    m_scroll->m_contentLayer->setPositionY(std::clamp(oldY, minY, 0.f));
+  }
+}
+
 void StageListLayer::reload()
 {
-  if (!m_stage || !m_content)
+  m_profile = GlobalStore::get()->getProfileByLevel(m_level);
+  m_stages = m_profile ? &m_profile->data.stages : nullptr;
+  if (!m_stages || m_stages->empty())
+    return;
+  m_currentIndex = std::clamp(m_currentIndex, 0, static_cast<int>(m_stages->size()) - 1);
+  m_stage = &m_stages->at(m_currentIndex);
+  m_uncheckedStage = getFirstUncheckedStage(*m_profile);
+  if (!m_content)
     return;
 
   drawArrows();
@@ -232,6 +251,7 @@ void StageListLayer::reload()
   m_content->updateLayout();
   m_scroll->m_contentLayer->updateLayout();
   scrollToTop();
+  StageSwitchedEvent().send(static_cast<int>(m_stages->size()), m_stage);
 }
 
 void StageListLayer::setSortBy(StageListSortBy sortBy)
@@ -246,9 +266,7 @@ void StageListLayer::setRunsVisabilityForCompleted(bool visible)
 
 void StageListLayer::drawArrows()
 {
-  const auto stagesMetaInfo = getMetaInfoFromStages(*m_stages);
-
-  if (!m_stages || !m_stage || stagesMetaInfo.consideredStages->empty() || stagesMetaInfo.consideredStages->size() < 2)
+  if (!m_stages || !m_stage || m_stages->size() < 2)
     return;
 
   if (m_buttonMenuLeft)
@@ -296,7 +314,7 @@ void StageListLayer::drawArrows()
   m_buttonMenuRight->addChild(m_buttonRight);
   m_buttonMenuRight->updateLayout();
 
-  m_buttonMenuRight->setVisible(m_stage->stage < stagesMetaInfo.total);
+  m_buttonMenuRight->setVisible(m_currentIndex + 1 < static_cast<int>(m_stages->size()));
   this->addChild(m_buttonMenuRight);
 }
 
@@ -318,30 +336,16 @@ void StageListLayer::onNextStageBtn(CCObject *sender)
 
 void StageListLayer::onPrevStage()
 {
-  const auto stagesMetaInfo = getMetaInfoFromStages(*m_stages);
-
-  if (!m_stages || stagesMetaInfo.consideredStages->empty() || stagesMetaInfo.consideredStages->size() < 2)
+  if (!m_stages || m_currentIndex <= 0)
     return;
-
-  if (m_currentIndex > 0)
-    --m_currentIndex;
-
-  m_stage = &stagesMetaInfo.consideredStages->at(m_currentIndex);
-  StageSwitchedEvent().send(stagesMetaInfo.consideredStages->size(), m_stage);
+  --m_currentIndex;
   reload();
 }
 
 void StageListLayer::onNextStage()
 {
-  const auto stagesMetaInfo = getMetaInfoFromStages(*m_stages);
-
-  if (!m_stages || stagesMetaInfo.consideredStages->empty() || stagesMetaInfo.consideredStages->size() < 2)
+  if (!m_stages || m_currentIndex + 1 >= static_cast<int>(m_stages->size()))
     return;
-
-  if (m_currentIndex + 1 < static_cast<int>(stagesMetaInfo.total))
-    ++m_currentIndex;
-
-  m_stage = &stagesMetaInfo.consideredStages->at(m_currentIndex);
-  StageSwitchedEvent().send(stagesMetaInfo.consideredStages->size(), m_stage);
+  ++m_currentIndex;
   reload();
 }
